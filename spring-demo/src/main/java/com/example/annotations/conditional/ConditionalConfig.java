@@ -1,9 +1,4 @@
-package com.example.annotations.scope;
-
-import com.example.annotations.bean.Person;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
+package com.example.annotations.conditional;
 
 /**
  * *                            _ooOoo_
@@ -38,19 +33,8 @@ import org.springframework.context.annotation.Scope;
  * *                  不见满街漂亮妹，哪个归得程序员？
  *
  * @Author:shixianqing
- * @Date:2019/9/3 14:14
+ * @Date:2019/9/3 14:42
  * @Description:
- * prototype : 多实例，容器启动的时候，不会创建实例，加载到容器里。获取一次，创建一个实例
- * singleton ： 单实例，容器启动的时候，默认创建实例，加载到容器里
  **/
-@Configuration
-public class ScopeConfig {
-
-    @Bean
-//    @Scope(value = "singleton")
-    @Scope("prototype")
-    public Person person(){
-
-        return new Person();
-    }
+public class ConditionalConfig {
 }

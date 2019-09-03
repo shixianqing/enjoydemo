@@ -37,4 +37,8 @@ package com.example.annotations.bean;
  * @Description:
  **/
 public class Person {
+
+    public Person(){
+        System.out.println("person constructor");
+    }
 }

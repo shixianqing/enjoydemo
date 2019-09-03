@@ -1,5 +1,9 @@
 package com.example.annotations.lazy;
 
+import com.example.annotations.bean.Person;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 /**
  * *                            _ooOoo_
  * *                           o8888888o
@@ -36,5 +40,12 @@ package com.example.annotations.lazy;
  * @Date:2019/9/3 14:14
  * @Description:
  **/
+@Configuration
 public class LazyConfig {
+
+    @Bean
+    @Lazy
+    public Person person(){
+        return new Person();
+    }
 }
