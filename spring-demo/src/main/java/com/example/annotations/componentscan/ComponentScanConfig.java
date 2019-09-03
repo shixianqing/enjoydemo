@@ -1,6 +1,7 @@
 package com.example.annotations.componentscan;
 
 import com.example.annotations.bean.Person;
+import com.example.annotations.componentscan.custom.CustomerTypeFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -43,10 +44,26 @@ import org.springframework.stereotype.Service;
  * @Author:shixianqing
  * @Date:2019/9/1 18:10
  * @Description:
+ * includeFilters时，useDefaultFilters = false
+ * excludeFilters时，useDefaultFilters = true，将所有bean扫描到，然后从中剔除要过滤的bean
+ * for (TypeFilter tf : this.excludeFilters) {
+ * 			if (tf.match(metadataReader, getMetadataReaderFactory())) {
+ * 				return false;
+ * 			}
+ * 		}
+ * 		for (TypeFilter tf : this.includeFilters) {
+ * 			if (tf.match(metadataReader, getMetadataReaderFactory())) {
+ * 				return isConditionMatch(metadataReader);
+ * 			}
+ * 		}
  **/
 @Configuration
-@ComponentScan(excludeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION,classes = {Controller.class})}
-,includeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION,classes = {Service.class})}
+//@ComponentScan(basePackages = {"com.example.annotations"},excludeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION,classes = {Service.class})}
+////,includeFilters = {@ComponentScan.Filter(type = FilterType./**/ANNOTATION,classes = {Service.class})},useDefaultFilters = false
+//)
+@ComponentScan(basePackages = {"com.example.annotations"},
+        includeFilters = {@ComponentScan.Filter(type = FilterType.CUSTOM,classes = {CustomerTypeFilter.class})},
+        useDefaultFilters = false
 )
 public class ComponentScanConfig {
 
