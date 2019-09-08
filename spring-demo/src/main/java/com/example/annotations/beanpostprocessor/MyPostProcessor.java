@@ -1,9 +1,9 @@
-package com.example.annotations.lazy;
+package com.example.annotations.beanpostprocessor;
 
-import com.example.annotations.bean.Person;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.stereotype.Component;
+
 /**
  * *                            _ooOoo_
  * *                           o8888888o
@@ -37,15 +37,24 @@ import org.springframework.context.annotation.Lazy;
  * *                  不见满街漂亮妹，哪个归得程序员？
  *
  * @Author:shixianqing
- * @Date:2019/9/3 14:14
- * @Description: beanpostprocessor
+ * @Date:2019/8/23 15:26
+ * @Description:
  **/
-@Configuration
-public class LazyConfig {
+@Component
+public class MyPostProcessor implements BeanPostProcessor {
 
-    @Bean
-    @Lazy
-    public Person person(){
-        return new Person();
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+
+        System.out.println("postProcessBeforeInitialization ，bean === " + bean +"，beanName === "+beanName);
+        return bean;
+    }
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        System.out.println("postProcessAfterInitialization ，bean === " + bean +"，beanName === "+beanName);
+        return bean;
     }
 }
+
+

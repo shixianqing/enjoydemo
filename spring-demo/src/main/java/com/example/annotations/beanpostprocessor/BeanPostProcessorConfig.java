@@ -1,9 +1,10 @@
-package com.example.annotations.lazy;
+package com.example.annotations.beanpostprocessor;
 
-import com.example.annotations.bean.Person;
+import com.example.annotations.beanpostprocessor.bean.Cat;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
+
 /**
  * *                            _ooOoo_
  * *                           o8888888o
@@ -37,15 +38,20 @@ import org.springframework.context.annotation.Lazy;
  * *                  不见满街漂亮妹，哪个归得程序员？
  *
  * @Author:shixianqing
- * @Date:2019/9/3 14:14
- * @Description: beanpostprocessor
+ * @Date:2019/8/23 15:26
+ * @Description:
  **/
 @Configuration
-public class LazyConfig {
+@ComponentScan(basePackages = {"com.example.annotations.beanpostprocessor"})
+public class BeanPostProcessorConfig {
 
-    @Bean
-    @Lazy
-    public Person person(){
-        return new Person();
+
+    @Bean//(initMethod = "init")
+    public Cat cat(){
+
+        return new Cat();
     }
+
 }
+
+
