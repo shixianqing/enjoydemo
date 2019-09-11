@@ -81,6 +81,11 @@ public class User {
         this.positionId = positionId;
     }
 
+//    public User(Integer id, String userName) {
+//        this.id = id;
+//        this.userName = userName;
+//    }
+
     @Override
     public String toString() {
         return "User{" +

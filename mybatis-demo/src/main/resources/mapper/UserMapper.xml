@@ -2,6 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.mapper.UserMapper" >
   <resultMap id="BaseResultMap" type="com.example.model.User" >
+      <!--
+        构造函数，mybatis默认使用无参构造函数实例化对象，如果实体里声明了有参构造函数，必须在这里声明有参构造
+        否则会报找不到构造函数
+      -->
+      <!--<constructor>-->
+          <!--<idArg column="id" javaType="int"/>-->
+          <!--<arg column="user_name" javaType="String"/>-->
+      <!--</constructor>-->
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="real_name" property="realName" jdbcType="VARCHAR" />
