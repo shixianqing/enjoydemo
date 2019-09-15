@@ -19,6 +19,34 @@
     <result column="note" property="note" jdbcType="VARCHAR" />
     <result column="position_id" property="positionId" jdbcType="INTEGER" />
   </resultMap>
+
+  <resultMap id="oneToOneMap" type="com.example.model.User" extends="BaseResultMap">
+     <association property="position" column="position_id" fetchType="lazy"
+                     select="com.example.mapper.PositionMapper.selectByPrimaryKey"/>
+  </resultMap>
+  <resultMap id="oneToOneMap1" type="com.example.model.User" extends="BaseResultMap">
+     <association property="position" javaType="com.example.model.Position" columnPrefix="post_">
+         <id column="id" property="id"/>
+         <result column="name" property="postName"/>
+         <result column="note" property="note"/>
+     </association>
+  </resultMap>
+
+  <resultMap id="oneToMany1" type="com.example.model.User" extends="BaseResultMap">
+      <collection property="jobHistories" ofType="com.example.model.JobHistory">
+          <id column="job_id" property="id"/>
+          <result column="user_id" property="userId"/>
+          <result column="comp_name" property="compName"/>
+          <result column="years" property="years"/>
+          <result column="title" property="title"/>
+      </collection>
+  </resultMap>
+
+    <resultMap id="oneToMany2" type="com.example.model.User" extends="BaseResultMap">
+        <collection property="jobHistories" column="id" fetchType="lazy"
+                    select="com.example.mapper.JobHistoryMapper.selectByUserId"/>
+    </resultMap>
+    
   <sql id="Base_Column_List" >
     id, user_name, real_name, sex, mobile, email, note, position_id
   </sql>
@@ -32,7 +60,7 @@
     delete from t_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.example.model.User" >
+  <insert id="insert" parameterType="com.example.model.User" useGeneratedKeys="true" keyProperty="id">
     insert into t_user (id, user_name, real_name, 
       sex, mobile, email, 
       note, position_id)
@@ -133,4 +161,104 @@
       position_id = #{positionId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectWithPlaceHolder" resultMap="BaseResultMap">
+    select ${userName} from ${table} where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="batchQueryById" resultMap="BaseResultMap">
+      select
+        <include refid="Base_Column_List"/>
+      from
+        t_user
+      where
+        id in
+      <foreach collection="array" item="id" separator="," open="(" close=")">
+          #{id}
+      </foreach>
+  </select>
+
+  <insert id="batchInsert">
+       insert into t_user (user_name, real_name,
+      sex, mobile, email,
+      note, position_id)
+    values
+      <foreach collection="list" item="user" separator=",">
+          ( #{user.userName,jdbcType=VARCHAR}, #{user.realName,jdbcType=VARCHAR},
+          #{user.sex,jdbcType=TINYINT}, #{user.mobile,jdbcType=VARCHAR}, #{user.email,jdbcType=VARCHAR},
+          #{user.note,jdbcType=VARCHAR}, #{user.positionId,jdbcType=INTEGER})
+      </foreach>
+  </insert>
+
+  <select id="selectForChooseOp" resultMap="BaseResultMap">
+      select
+        <include refid="Base_Column_List"/>
+      from
+        t_user
+      <where>
+          <choose>
+              <when test="userName != null and userName != ''">
+                  and user_name = #{userName}
+              </when>
+              <when test="id != null">
+                  and id = #{id}
+              </when>
+              <otherwise>
+                  and 1 = 1
+              </otherwise>
+          </choose>
+      </where>
+  </select>
+    
+  <select id="selectForOneToOne" resultMap="oneToOneMap">
+      select
+        <include refid="Base_Column_List"/>
+      from
+        t_user
+      where id = #{id}
+  </select>
+
+
+  <select id="selectForOneToOne1" resultMap="oneToOneMap1">
+      select
+        u.id,u.user_name,p.id as post_id,p.post_name
+      from
+        t_user u,t_position p
+      where u.id = #{id} and u.position_id = p.id
+  </select>
+
+  <select id="selectForOneToMany" resultMap="oneToMany1">
+      select
+       u.id, u.user_name, u.real_name, u.sex, u.mobile, u.email, u.note, u.position_id,
+       j.id as job_id, j.user_id, j.comp_name, j.years, j.title
+      from
+        t_user u,t_job_history j
+      where
+        u.id = j.user_id and u.id = #{id}
+  </select>
+
+  <select id="selectForOneToMany1" resultMap="oneToMany2">
+    select
+      <include refid="Base_Column_List"/>
+    from
+      t_user
+    where id = #{id}
+  </select>
+
+  <resultMap id="manyToManyResult" type="com.example.model.User" extends="BaseResultMap">
+      <collection property="roles" column="id" fetchType="lazy"
+                  select="com.example.mapper.RoleMapper.selectForManyToMany"/>
+  </resultMap>
+
+  <select id="selectFormanyToMany1" resultMap="manyToManyResult">
+    select
+      <include refid="Base_Column_List"/>
+    from
+      t_user
+    <where>
+        <if test="id != null">
+            id = #{id}
+        </if>
+    </where>
+  </select>
 </mapper>
